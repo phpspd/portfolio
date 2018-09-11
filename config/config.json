@@ -1,0 +1,7 @@
+{
+    "port": 1333,
+    "debug": true,
+    "self": {
+        "name": "portfolio"
+    }
+}

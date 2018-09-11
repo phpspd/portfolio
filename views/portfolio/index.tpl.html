@@ -1,0 +1,60 @@
+<table border="1">
+    <tr>
+        <th>Название</th>
+        <th>ISIN</th>
+        <th>Дата покупки</th>
+        <th>Количество</th>
+        <th>Цена покупки, RUB</th>
+        <th>Сумма покупки, RUB</th>
+        <th>НКД, RUB</th>
+        <th>Цена, RUB</th>
+        <th>Сумма, RUB</th>
+        <th>Дивиденды, RUB</th>
+        <th>Доход, RUB</th>
+        <th>Доход, %</th>
+    </tr>
+    {{#portfolio}}
+    {{#items}}
+    <tr>
+        <td>{{title}}</td>
+        <td>{{ISIN}}</td>
+        <td>{{buyDateFormatted}}</td>
+        <td>{{amountFormatted}}</td>
+        <td>{{buyPriceFormatted}}</td>
+        <td>{{buySumFormatted}}</td>
+        <td>{{NKDSumFormatted}}</td>
+        <td>{{priceFormatted}}</td>
+        <td>{{sumFormatted}}</td>
+        <td>{{dividendsSumFormatted}}</td>
+        <td>{{dynSumFormatted}}</td>
+        <td>{{dynSumRelFormatted}}</td>
+    </tr>
+    {{/items}}
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{amountFormatted}}</td>
+        <td></td>
+        <td>{{buySumFormatted}}</td>
+        <td>{{NKDSumFormatted}}</td>
+        <td></td>
+        <td>{{sumFormatted}}</td>
+        <td>{{dividendsSumFormatted}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td colspan="2">{{fullBuySumFormatted}}</td>
+        <td></td>
+        <td colspan="2">{{fullSumFormatted}}</td>
+        <td>{{fullDynSumFormatted}}</td>
+        <td>{{fullDynSumRelFormatted}}</td>
+    </tr>
+    {{/portfolio}}
+</table>
