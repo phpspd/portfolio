@@ -7,6 +7,7 @@
         <th>Цена покупки, RUB</th>
         <th>Сумма покупки, RUB</th>
         <th>НКД, RUB</th>
+        <th>Комиссия, RUB</th>
         <th>Цена, RUB</th>
         <th>Сумма, RUB</th>
         <th>Дивиденды, RUB</th>
@@ -23,6 +24,7 @@
         <td>{{buyPriceFormatted}}</td>
         <td>{{buySumFormatted}}</td>
         <td>{{NKDSumFormatted}}</td>
+        <td>{{taxSumFormatted}}</td>
         <td>{{priceFormatted}}</td>
         <td>{{sumFormatted}}</td>
         <td>{{dividendsSumFormatted}}</td>
@@ -38,6 +40,7 @@
         <td></td>
         <td>{{buySumFormatted}}</td>
         <td>{{NKDSumFormatted}}</td>
+        <td>{{taxSumFormatted}}</td>
         <td></td>
         <td>{{sumFormatted}}</td>
         <td>{{dividendsSumFormatted}}</td>
@@ -50,7 +53,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td colspan="2">{{fullBuySumFormatted}}</td>
+        <td colspan="3">{{fullBuySumFormatted}}</td>
         <td></td>
         <td colspan="2">{{fullSumFormatted}}</td>
         <td>{{fullDynSumFormatted}}</td>

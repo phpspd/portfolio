@@ -48,9 +48,15 @@ module.exports.index = async function(req, res, next) {
             }
         }
 
-        item.days = Math.ceil(((item.sellDate ? datesHelper.parseDateSmart(item.sellDate) : Date.now()) - datesHelper.parseDateSmart(item.buyDate)) / 1000 / 60 / 60 / 24)
+        item.days = Math.ceil(((item.sellDate ? datesHelper.parseDateSmart(item.sellDate) : Date.now()) - datesHelper.parseDateSmart(item.buyDate)) / 1000 / 60 / 60 / 24);
         item.buySum = item.buyPrice * item.amount;
         item.sum = item.price * item.amount;
+        item.taxSum = item.buySum * (portfolioData.get('brokerTax') || 0);
+        
+        if (item.sellPrice) {
+            item.taxSum += item.price * item.amount * (portfolioData.get('brokerTax') || 0);
+        }
+
         item.dynPrice = item.price - item.buyPrice;
         item.dynPriceRel = item.dynPrice * 100 / item.buyPrice;
         item.dynPricePerDay = item.dynPrice / item.days;
@@ -78,12 +84,15 @@ module.exports.index = async function(req, res, next) {
 
         viewData.portfolio.amount = viewData.portfolio.amount || 0;
         viewData.portfolio.amount += item.amount;
+        
+        viewData.portfolio.taxSum = viewData.portfolio.taxSum || 0;
+        viewData.portfolio.taxSum += item.taxSum;
 
         viewData.portfolio.items = viewData.portfolio.items || [];
         viewData.portfolio.items.push(item);
     }
 
-    viewData.portfolio.fullBuySum = viewData.portfolio.buySum + viewData.portfolio.NKDSum;
+    viewData.portfolio.fullBuySum = viewData.portfolio.buySum + viewData.portfolio.NKDSum + viewData.portfolio.taxSum;
 
     viewData.portfolio.fullSum = viewData.portfolio.sum + viewData.portfolio.dividendsSum;
     viewData.portfolio.fullDynSum = viewData.portfolio.fullSum - viewData.portfolio.fullBuySum;
