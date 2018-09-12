@@ -20,7 +20,11 @@ module.exports.index = async function(req, res, next) {
 
     let items = portfolioData.get('items');
 
+    let price_key = portfolioData.get('price_key');
+
     viewData.portfolio = {};
+
+    let today = datesHelper.parseDateSmart(req.query.today) ? datesHelper.parseDateSmart(req.query.today) : datesHelper.getStartTodayDate();
 
     for (let item of items) {
         item = Object.assign({}, item);
@@ -28,11 +32,18 @@ module.exports.index = async function(req, res, next) {
 
         console.log(securityData.BOARDID);
 
+        item.price_key = (
+            typeof price_key === 'string'
+                ? price_key
+                : price_key.filter((key) => { return securityData[key] > 0 }).shift()
+        ) || 'LAST';
+        let price = securityData[item.price_key];
+
         if (securityData.BOARDID == 'EQOB') {
-            item.price = securityData[portfolioData.get('price_key') || 'LAST'] * securityData.securityInfo.FACEVALUE / 100;
+            item.price = price * securityData.securityInfo.FACEVALUE / 100;
             item.buyPrice = item.buyPrice * securityData.securityInfo.FACEVALUE / 100;
         } else {
-            item.price = securityData[portfolioData.get('price_key') || 'LAST'];
+            item.price = price;
         }
 
         item.title = securityData.node.friendlyTitle;
@@ -70,7 +81,22 @@ module.exports.index = async function(req, res, next) {
         viewData.portfolio.sum = viewData.portfolio.sum || 0;
         viewData.portfolio.sum += item.sum;
 
-        item.dividendsSum = item.dividends ? item.dividends.reduce((sum, div) => { return sum + (div * item.amount)}, 0) : 0;
+        item.dividendsSum = item.dividends
+            ? item.dividends.reduce(
+                (sum, div) => {
+                    if (typeof div == 'number') {
+                        return sum + (div * item.amount);
+                    }
+                    if (
+                        +datesHelper.parseDateSmart(div.date) >= +datesHelper.parseDateSmart(item.buyDate) + 2*24*60*60*1000
+                        && (!item.sellDate || +datesHelper.parseDateSmart(div.date) <= +datesHelper.parseDateSmart(item.sellDate) + 1*24*60*60*1000)
+                        && +datesHelper.parseDateSmart(div.date) <= today
+                    ) {
+                        return sum + (div.value * item.amount);
+                    }
+                    return sum;
+                }, 0
+            ) : 0;
         viewData.portfolio.dividendsSum = viewData.portfolio.dividendsSum || 0;
         viewData.portfolio.dividendsSum += item.dividendsSum;
 

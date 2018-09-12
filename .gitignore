@@ -1,3 +1,4 @@
 /data/portfolio.json
 /node_modules
 /package-lock.json
+/.vscode/launch.json
